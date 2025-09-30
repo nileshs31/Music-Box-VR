@@ -13,16 +13,14 @@ public class MidiGridTester : MonoBehaviour
     public string midiPath;
 
     [Header("Grid Settings")]
-    public int maxRows = 25;   // time slices
-    public int pitchRows = 16; // fixed vertical notes C4–D6
+    public int maxRows = 25; 
+    public int pitchRows = 16; 
 
-    // Allowed pitches: C4, D4, …, D6
     private readonly int[] allowedNotes = {
         60, 62, 64, 65, 67, 69, 71,
         72, 74, 76, 77, 79, 81, 83, 84, 86
     };
 
-    // The grid: rows × pitches, each cell holds a list of notes
     private List<List<List<Note>>> grid;
 
     void Start()
@@ -35,7 +33,6 @@ public class MidiGridTester : MonoBehaviour
 
         BuildGrid(midiPath);
 
-        // Print results
         for (int r = 0; r < maxRows; r++)
         {
             for (int p = 0; p < pitchRows; p++)
@@ -48,7 +45,6 @@ public class MidiGridTester : MonoBehaviour
 
     void BuildGrid(string path)
     {
-        // Init grid (rows x 16)
         grid = new List<List<List<Note>>>();
         for (int r = 0; r < maxRows; r++)
         {
@@ -57,14 +53,11 @@ public class MidiGridTester : MonoBehaviour
             grid.Add(row);
         }
 
-        // Read MIDI + notes sorted by start tick
         MidiFile midi = MidiFile.Read(path);
         var tempoMap = midi.GetTempoMap();
         var notesSorted = midi.GetNotes().OrderBy(n => n.Time).ToList();
         if (notesSorted.Count == 0) return;
 
-        // ---- compute onset tolerance in ticks ----
-        // build list of unique start ticks
         var uniqueTicks = new List<long>();
         long lastTick = -1;
         foreach (var n in notesSorted)
@@ -82,26 +75,22 @@ public class MidiGridTester : MonoBehaviour
             long gap = uniqueTicks[i] - uniqueTicks[i - 1];
             if (gap > 0 && gap < minGap) minGap = gap;
         }
-        // fallback if everything is at the same tick
         if (minGap == long.MaxValue) minGap = 1;
 
-        long tolTicks = Math.Max(1, minGap / 2); // tolerance = half of the smallest positive gap
+        long tolTicks = Math.Max(1, minGap / 2); 
 
-        // ---- group notes into rows by onset with tolerance ----
         int currentRow = 0;
         long rowStartTick = notesSorted[0].Time;
 
         foreach (var note in notesSorted)
         {
-            // new row if beyond tolerance
             if (note.Time - rowStartTick > tolTicks)
             {
                 currentRow++;
-                if (currentRow >= maxRows) break; // ignore the rest of the song
+                if (currentRow >= maxRows) break;
                 rowStartTick = note.Time;
             }
 
-            // map pitch to 0..15 (C4..D6)
             int pitchIndex = Array.IndexOf(allowedNotes, note.NoteNumber);
             if (pitchIndex < 0) continue;
 

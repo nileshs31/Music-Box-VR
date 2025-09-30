@@ -56,7 +56,6 @@ public class CylinderPinSpawner : MonoBehaviour
             pinsParent = go.transform;
         }
 
-        // clear previous pins (optional)
         for (int i = pinsParent.childCount - 1; i >= 0; i--)
             DestroyImmediate(pinsParent.GetChild(i).gameObject);
 
@@ -73,17 +72,16 @@ public class CylinderPinSpawner : MonoBehaviour
                 GameObject pin = Instantiate(pinPrefab, pinsParent);
                 pin.transform.localPosition = localPos;
 
-                // face outward
                 Vector3 outward = new Vector3(localPos.x, 0f, localPos.z).normalized;
                 if (outward.sqrMagnitude < 1e-6f) outward = Vector3.forward;
                 pin.transform.localRotation = Quaternion.LookRotation(outward, Vector3.up);
 
-                pin.SetActive(false);            // <- start OFF
+                pin.SetActive(false);         
                 pins[step, pitch] = pin;
             }
         }
 
-        ApplyGridToPins(); // <- turn on only those present in grid
+        ApplyGridToPins(); 
     }
 
     void ApplyGridToPins()
@@ -121,7 +119,6 @@ public class CylinderPinSpawner : MonoBehaviour
 
     void BuildGrid(string path)
     {
-        // Init grid (rows x pitches)
         grid = new List<List<List<Note>>>();
         for (int r = 0; r < noOfRows; r++)
         {
@@ -134,20 +131,14 @@ public class CylinderPinSpawner : MonoBehaviour
         var notesSorted = midi.GetNotes().OrderBy(n => n.Time).ToList();
         if (notesSorted.Count == 0) return;
 
-        // ----- PPQ & jitter tolerance (very small) -----
-        int ppq = 480; // sensible default
+        int ppq = 480;
         if (midi.TimeDivision is TicksPerQuarterNoteTimeDivision tpq)
             ppq = tpq.TicksPerQuarterNote;
 
-        // Only collapse micro jitter (≈ 2 ms @ 120 BPM). Increase if your files are noisy.
-        long jitterTicks = Math.Max(1, ppq / 240); // ~0.00417 quarter notes
+        long jitterTicks = Math.Max(1, ppq / 240);
 
-        // ----- (Optional) empty-row insertion threshold -----
-        // Estimate a "typical" gap in ticks from unique onsets, then insert empties when gap is much larger.
-        // You can tune or disable with gapMultiplierForEmpty <= 0.
         const float gapMultiplierForEmpty = 1.75f;
 
-        // Build unique onset list using the tiny jitter
         List<long> uniqueOnsets = new List<long>();
         long groupStart = notesSorted[0].Time;
         uniqueOnsets.Add(groupStart);
@@ -160,7 +151,6 @@ public class CylinderPinSpawner : MonoBehaviour
             }
         }
 
-        // Typical gap (median of gaps). Fallback to ppq/4 if not enough data.
         long medianGapTicks = ppq / 4;
         if (uniqueOnsets.Count >= 3)
         {
@@ -179,11 +169,9 @@ public class CylinderPinSpawner : MonoBehaviour
             }
         }
 
-        // Now fill rows: distinct onsets with tiny jitter; insert empties for big gaps
         int currentRow = 0;
         long currentRowStart = notesSorted[0].Time;
 
-        // Place notes in row 0
         foreach (var n in notesSorted)
         {
             if (n.Time <= currentRowStart + jitterTicks)
@@ -193,7 +181,6 @@ public class CylinderPinSpawner : MonoBehaviour
             }
         }
 
-        // Walk all notes again to advance rows on new onsets
         for (int i = 1; i < notesSorted.Count && currentRow < noOfRows; i++)
         {
             var n = notesSorted[i];
@@ -203,7 +190,7 @@ public class CylinderPinSpawner : MonoBehaviour
             {
                 long gap = n.Time - currentRowStart;
 
-                // Insert empty rows for big gaps (optional)
+                // Insert empty rows for big gaps
                 if (gapMultiplierForEmpty > 0 && gap > (long)(medianGapTicks * gapMultiplierForEmpty))
                 {
                     int empties = (int)Math.Floor(gap / (double)medianGapTicks) - 1;
@@ -218,8 +205,6 @@ public class CylinderPinSpawner : MonoBehaviour
                 currentRow++;
                 currentRowStart = n.Time;
 
-                // put *all* notes of this onset (within jitter) into this new row
-                // (scan forward while within jitter window)
                 for (int k = i; k < notesSorted.Count; k++)
                 {
                     var nk = notesSorted[k];
