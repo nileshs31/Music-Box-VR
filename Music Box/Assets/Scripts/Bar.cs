@@ -21,7 +21,7 @@ public class Bar : MonoBehaviour
     {
         if (other.CompareTag("boop"))
         {
-            aud.Play();
+            aud.PlayOneShot(aud.clip);
         }
     }
 }

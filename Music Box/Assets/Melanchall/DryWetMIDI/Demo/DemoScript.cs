@@ -74,11 +74,7 @@ public class DemoScript : MonoBehaviour
         }
 
         //var midiFile = patternBuilder.Build().ToFile(TempoMap.Default);
-
         var midiFile = MidiFile.Read(path);
-
-        Debug.Log("Test MIDI file created.");
-
         return midiFile;
     }
 
@@ -87,11 +83,25 @@ public class DemoScript : MonoBehaviour
         Debug.Log("Initializing playback...");
 
         _playback = midiFile.GetPlayback(_outputDevice);
-        _playback.Loop = true;
+        //varmidiFile.GetNotes();
+
+        Debug.Log(midiFile.GetNotes());
+
+        var test = midiFile.GetNotes();
+
+        foreach(var item in test) 
+        {
+            Debug.Log(item);
+        }
+
+        
+
+
+        _playback.Loop = false;
         _playback.NotesPlaybackStarted += OnNotesPlaybackStarted;
         _playback.NotesPlaybackFinished += OnNotesPlaybackFinished;
        
-        Debug.Log("Playback initialized.");
+        //Debug.Log("Playback initialized.");
     }
 
     private void StartPlayback()
