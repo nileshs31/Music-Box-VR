@@ -16,6 +16,8 @@ public class DemoScript : MonoBehaviour
     private OutputDevice _outputDevice;
     private Playback _playback;
 
+    public string path = "";
+
     private void Start()
     {
         InitializeOutputDevice();
@@ -71,7 +73,10 @@ public class DemoScript : MonoBehaviour
             patternBuilder.Note(Melanchall.DryWetMidi.MusicTheory.Note.Get(noteNumber));
         }
 
-        var midiFile = patternBuilder.Build().ToFile(TempoMap.Default);
+        //var midiFile = patternBuilder.Build().ToFile(TempoMap.Default);
+
+        var midiFile = MidiFile.Read(path);
+
         Debug.Log("Test MIDI file created.");
 
         return midiFile;
