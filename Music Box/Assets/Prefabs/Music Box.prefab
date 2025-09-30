@@ -6937,6 +6937,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8411627934160193585, guid: 844da1fff2769994abf78de689463aa3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: -5568371526223589888, guid: 844da1fff2769994abf78de689463aa3,
         type: 3}
       propertyPath: m_IsActive
@@ -6982,6 +6987,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Music Box
       objectReference: {fileID: 0}
+    - target: {fileID: 2942529372655497076, guid: 844da1fff2769994abf78de689463aa3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cc33e80b0fe33ac4c9211a7d5315c4c6, type: 2}
     - target: {fileID: 6350136609793988344, guid: 844da1fff2769994abf78de689463aa3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -7063,6 +7073,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5766354892026805826}
+    - targetCorrespondingSourceObject: {fileID: -5568371526223589888, guid: 844da1fff2769994abf78de689463aa3,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1320828531416330363}
+    - targetCorrespondingSourceObject: {fileID: -1493019833958040928, guid: 844da1fff2769994abf78de689463aa3,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7137018258391934890}
   m_SourcePrefab: {fileID: 100100000, guid: 844da1fff2769994abf78de689463aa3, type: 3}
 --- !u!4 &738484031030023722 stripped
 Transform:
@@ -7070,6 +7088,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6198407579258899483}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4414249487233562299 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1493019833958040928, guid: 844da1fff2769994abf78de689463aa3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6198407579258899483}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7137018258391934890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4414249487233562299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca628a79559cccd4ca9f38963c5c399c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 7.5
+  onZ: 1
 --- !u!4 &7082635075962676494 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5453936347315508971, guid: 844da1fff2769994abf78de689463aa3,
@@ -7097,9 +7135,23 @@ MonoBehaviour:
   cylinder: {fileID: 7796659143993220475}
   pinPrefab: {fileID: 8474288533144643779, guid: bdc18229471aab540b785e84c77088d2,
     type: 3}
-  noOfRows: 54
-  distanceRefernce: 60
+  noOfRows: 145
+  distanceRefernce: 150
   noOfPitch: 16
   radius: 0.0055
   height: 0.0169
   midiPath: Assets/Melanchall\DryWetMIDI/Demo/Theme.mid
+--- !u!114 &1320828531416330363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7258678087709868571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca628a79559cccd4ca9f38963c5c399c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 7.5
+  onZ: 0
